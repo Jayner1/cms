@@ -6,6 +6,10 @@
     <p *ngIf="contact.imageUrl">
       <img [src]="contact.imageUrl" alt="{{ contact.name }}" style="width: 100px; height: 100px;">
     </p>
+    <div class="button-group">
+      <button class="btn btn-primary" type="button">Edit</button>
+      <button class="btn btn-danger" type="button">Delete</button>
+    </div>
   </div>
   <p *ngIf="!contact">Select a contact to view details here.</p>
 </div>

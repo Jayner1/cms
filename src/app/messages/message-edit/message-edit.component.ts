@@ -7,27 +7,28 @@ import { Message } from '../message.model';
   styleUrls: ['./message-edit.component.css']
 })
 export class MessageEditComponent {
-  @Output() addMessageEvent = new EventEmitter<Message>(); 
+  @Output() addMessageEvent = new EventEmitter<Message>();
+  sender: string = '';
   subject: string = '';
   msgText: string = '';
-  currentSender: string = 'Your Name'; 
 
   onSendMessage() {
-    if (this.subject && this.msgText) {
-      const newMessage: Message = {
-        id: Math.floor(Math.random() * 1000), 
-        sender: this.currentSender,
-        subject: this.subject,
-        msgText: this.msgText
-      };
-
-      this.addMessageEvent.emit(newMessage); 
-      this.onClear();  
-    }
+    const newMessage = new Message(
+      Math.floor(Math.random() * 1000), 
+      this.sender,
+      this.subject,
+      this.msgText,
+      new Date()
+    );
+    this.addMessageEvent.emit(newMessage);
+    this.sender = '';
+    this.subject = '';
+    this.msgText = '';
   }
 
   onClear() {
-    this.subject = ''; 
-    this.msgText = '';  
+    this.sender = '';
+    this.subject = '';
+    this.msgText = '';
   }
 }

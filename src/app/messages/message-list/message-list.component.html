@@ -1,2 +1,9 @@
-<div class="list-group">
+<div class="message-list">
+  <cms-message-item
+    *ngFor="let message of messages"
+    [message]="message">
+  </cms-message-item>
+  <cms-message-edit
+    (addMessageEvent)="onAddMessage($event)">
+  </cms-message-edit>
 </div>
