@@ -1,20 +1,11 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
-      <div class="media">
-        <div class="media-left">
-          <img [src]="contact?.imageUrl || ''" alt="{{ contact?.name || 'No Contact' }}" class="media-object" style="width: 50px; height: 50px;">
-        </div>
-        <div class="media-body">
-          <h3 class="panel-title">{{ contact?.name || "No Contact Selected" }}</h3>
-        </div>
-        <div class="media-right">
-          <a href="#" class="btn btn-primary btn-xs" style="margin-right: 5px;">Edit</a>
-          <a href="#" class="btn btn-danger btn-xs">Delete</a>
-        </div>
-      </div>
-    </div>
-    <div class="panel-body">
-      <p><strong>Email:</strong> {{ contact?.email || "" }}</p>
-      <p><strong>Phone:</strong> {{ contact?.phone || "" }}</p>
-    </div>
+<div class="panel-body">
+  <div *ngIf="contact">
+    <h4>{{ contact.name }}</h4>
+    <p><strong>Email:</strong> {{ contact.email }}</p>
+    <p><strong>Phone:</strong> {{ contact.phone }}</p>
+    <p *ngIf="contact.imageUrl">
+      <img [src]="contact.imageUrl" alt="{{ contact.name }}" style="width: 100px; height: 100px;">
+    </p>
   </div>
+  <p *ngIf="!contact">Select a contact to view details here.</p>
+</div>

@@ -1,8 +1,17 @@
-<div class="row">
-    <div class="col-md-5">
-        <contact-list></contact-list>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <contact-list (selectedContactEvent)="onContactSelected($event)"></contact-list>
     </div>
-    <div class="col-md-4">
-        <contact-detail></contact-detail>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Contact Details</h3>
+        </div>
+        <div class="panel-body">
+          <cms-contact-detail [contact]="selectedContact"></cms-contact-detail>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

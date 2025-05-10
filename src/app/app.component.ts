@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'cms';
+  selectedFeature: string = 'documents';
+
+  onNavigate(feature: string) {
+    this.selectedFeature = feature;
+  }
 }

@@ -1,0 +1,6 @@
+<div *ngIf="document">
+  <h4>{{ document.name }}</h4>
+  <p><strong>Description:</strong> {{ document.description }}</p>
+  <p><strong>URL:</strong> <a [href]="document.url" target="_blank">View Document</a></p>
+</div>
+<p *ngIf="!document">Select a document to view details here.</p>
