@@ -1,20 +1,38 @@
-import { Component } from '@angular/core';
-import { Message } from '../message.model'; 
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Message } from '../message.model';
+import { MessageService } from '../message.service';
+import { ContactService } from '../../contacts/contact.service';
+import { Contact } from '../../contacts/contact.model';
 
 @Component({
   selector: 'cms-message-list',
   templateUrl: './message-list.component.html',
   styleUrls: ['./message-list.component.css']
 })
-export class MessageListComponent {
-  messages: Message[] = [
-    new Message(1, 'John Doe', 'Greetings', 'Hello, how are you?', new Date('2025-05-10T10:00:00')),
-    new Message(2, 'Jane Smith', 'Meeting', 'Meeting at 2 PM today.', new Date('2025-05-10T11:30:00')),
-    new Message(3, 'Alice Johnson', 'Code Review', 'Can you review my code?', new Date('2025-05-10T12:15:00')),
-    new Message(4, 'Bob Wilson', 'Lunch', 'Lunch plans?', new Date('2025-05-10T13:00:00'))
-  ];
+export class MessageListComponent implements OnInit {
+  @Output() selectedMessageEvent = new EventEmitter<Message>();
+  messages: Message[] = [];
 
-  onAddMessage(message: Message) {
-    this.messages.push(message);
+  constructor(
+    private messageService: MessageService,
+    private contactService: ContactService
+  ) { }
+
+  ngOnInit(): void {
+    this.messages = this.messageService.getMessages();
+    this.messageService.messageChangedEvent.subscribe(
+      (messages: Message[]) => {
+        this.messages = messages;
+      }
+    );
+  }
+
+  getSenderName(senderId: string): string {
+    const contact: Contact | null = this.contactService.getContact(senderId);
+    return contact ? contact.name : 'Unknown';
+  }
+
+  onSelectedMessage(message: Message) {
+    this.selectedMessageEvent.emit(message);
   }
 }

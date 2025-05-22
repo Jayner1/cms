@@ -1,9 +1,6 @@
-export class Message {
-  constructor(
-    public id: number,
-    public sender: string,
-    public subject: string,
-    public msgText: string,
-    public timestamp: Date
-  ) {}
+export interface Message {
+  id: string;
+  subject: string;
+  msgText: string;
+  sender: string;
 }

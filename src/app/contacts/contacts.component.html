@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md-6">
-      <contact-list (selectedContactEvent)="onContactSelected($event)"></contact-list>
+      <cms-contact-list></cms-contact-list>
     </div>
     <div class="col-md-6">
       <div class="panel panel-default">
@@ -9,7 +9,7 @@
           <h3 class="panel-title">Contact Details</h3>
         </div>
         <div class="panel-body">
-          <cms-contact-detail [contact]="selectedContact"></cms-contact-detail>
+          <cms-contact-detail *ngIf="selectedContact" [contact]="selectedContact"></cms-contact-detail>
         </div>
       </div>
     </div>
