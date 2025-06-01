@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from '../message.model';
 import { ContactService } from '../../contacts/contact.service';
-import { Contact } from '../../contacts/contact.model';
 import { MessageService } from '../message.service';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cms-message-edit',
@@ -17,7 +17,8 @@ export class MessageEditComponent implements OnInit {
 
   constructor(
     private contactService: ContactService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -34,11 +35,13 @@ export class MessageEditComponent implements OnInit {
       this.messageService.addMessage(newMessage);
       this.newSubject = '';
       this.newMsgText = ''; 
+      this.router.navigateByUrl('/messages');
     }
   }
 
   onClear() {
     this.newSubject = '';
     this.newMsgText = '';
+    this.router.navigateByUrl('/messages');
   }
 }

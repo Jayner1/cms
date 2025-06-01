@@ -1,4 +1,4 @@
-<a class="list-group-item clearfix">
+<a class="list-group-item clearfix" [routerLink]="['/messages', message?.id]" routerLinkActive="active">
   <div>
     <span class="messageHeader">{{ message?.subject }} - {{ messageSender }}</span>
     <div class="messageText">{{ message?.msgText }}</div>
