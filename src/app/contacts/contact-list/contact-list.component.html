@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="row pad-left-right">
+            <span class="pull-left title">Contacts</span>
+            <div class="pull-right">
+              <a href="#" class="btn btn-success">New Contact</a>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="center-panel">
+            <ul class="list-group">
+              <li class="list-group-item" *ngFor="let contact of contacts" (click)="onSelected(contact)">
+                <div class="media">
+                  <div class="media-left">
+                    <img [src]="contact.imageUrl" alt="{{ contact.name }}" class="media-object" style="width: 50px; height: 50px;">
+                  </div>
+                  <div class="media-body">
+                    <h4 class="media-heading">{{ contact.name }}</h4>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+      </div>
+    </div>
+  </div>
+</div>

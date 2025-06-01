@@ -1,0 +1,12 @@
+.list-group-item {
+  padding: 0.75rem 1.25rem;
+  font-size: 1.2rem;
+  border: solid thin darkgrey;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.media-heading {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
