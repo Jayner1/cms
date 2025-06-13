@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Contact } from '../contact.model'; 
+import { Contact } from '../contact.model';
 
 @Component({
   selector: 'cms-contact-item',
@@ -7,5 +7,5 @@ import { Contact } from '../contact.model';
   styleUrls: ['./contact-item.component.css']
 })
 export class ContactItemComponent {
-  @Input() contact!: Contact;   
+  @Input() contact: Contact = new Contact('', '', '', '', '', null); 
 }

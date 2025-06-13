@@ -28,6 +28,10 @@ export class DocumentService {
     return null;
   }
 
+  getMaxId(): number {
+    return this.documents.length > 0 ? Math.max(...this.documents.map(doc => doc.id)) : 0;
+  }
+
   deleteDocument(document: Document) {
     if (!document) {
       return;
@@ -41,11 +45,18 @@ export class DocumentService {
   }
 
   addDocument(document: Document) {
+    if (!document) {
+      return;
+    }
+    document.id = this.getMaxId() + 1;
     this.documents.push(document);
     this.documentListChangedEvent.next(this.documents.slice());
   }
 
   updateDocument(index: number, newDocument: Document) {
+    if (index < 0 || index >= this.documents.length || !newDocument) {
+      return;
+    }
     this.documents[index] = newDocument;
     this.documentListChangedEvent.next(this.documents.slice());
   }

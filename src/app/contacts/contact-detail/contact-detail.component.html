@@ -1,15 +1,13 @@
 <div class="panel-body">
-  <div *ngIf="contact">
-    <h4>{{ contact.name }}</h4>
-    <p><strong>Email:</strong> {{ contact.email }}</p>
-    <p><strong>Phone:</strong> {{ contact.phone }}</p>
-    <p *ngIf="contact.imageUrl">
-      <img [src]="contact.imageUrl" alt="{{ contact.name }}" style="width: 100px; height: 100px;">
-    </p>
-    <div class="button-group">
-      <a class="btn btn-primary" [routerLink]="['/contacts', contact.id, 'edit']">Edit</a>
-      <a class="btn btn-danger" (click)="onDelete()">Delete</a>
-    </div>
+  <h4>{{ contact.name }}</h4>
+  <p><strong>Email:</strong> {{ contact.email }}</p>
+  <p><strong>Phone:</strong> {{ contact.phone }}</p>
+  <p *ngIf="contact.imageUrl">
+    <img [src]="contact.imageUrl" alt="{{ contact.name }}" style="width: 100px; height: 100px;">
+  </p>
+  <div class="button-group">
+    <a class="btn btn-primary" [routerLink]="['/contacts', contact.id, 'edit']">Edit</a>
+    <a class="btn btn-danger" (click)="onDelete()">Delete</a>
   </div>
-  <p *ngIf="!contact">Select a contact to view details here.</p>
+  <p *ngIf="!contact.name && !contact.email && !contact.phone">Select a contact to view details here.</p>
 </div>
