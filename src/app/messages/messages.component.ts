@@ -8,8 +8,15 @@ import { Message } from './message.model';
 })
 export class MessagesComponent {
   selectedMessage: Message | null = null;
+  isNew: boolean = false;
 
   onMessageSelected(message: Message) {
     this.selectedMessage = message;
+    this.isNew = false; // Viewing or editing existing message
+  }
+
+  onAddMessage() {
+    this.selectedMessage = null; // Clear selected message
+    this.isNew = true; // Flag to create a new message
   }
 }

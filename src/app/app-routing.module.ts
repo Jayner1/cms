@@ -20,6 +20,7 @@ const routes: Routes = [
     { path: ':id', component: MessageItemComponent }
   ]},
   { path: 'contacts', component: ContactsComponent, children: [
+    { path: '', pathMatch: 'full', redirectTo: 'new' }, 
     { path: 'new', component: ContactEditComponent },
     { path: ':id', component: ContactDetailComponent },
     { path: ':id/edit', component: ContactEditComponent }
@@ -30,4 +31,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -7,5 +7,6 @@ import { Contact } from '../contact.model';
   styleUrls: ['./contact-item.component.css']
 })
 export class ContactItemComponent {
-  @Input() contact: Contact = new Contact('', '', '', '', '', null); 
+  @Input() contact!: Contact; 
+  @Input() isClickable: boolean = true;
 }

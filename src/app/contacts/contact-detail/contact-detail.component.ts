@@ -9,7 +9,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
   styleUrls: ['./contact-detail.component.css']
 })
 export class ContactDetailComponent implements OnInit {
-  contact: Contact = new Contact('', '', '', '', '', null); // Default instance
+  contact: Contact | null = null;
 
   constructor(
     private contactService: ContactService,
@@ -18,17 +18,17 @@ export class ContactDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.params.subscribe(
-      (params: Params) => {
-        const id = params['id'];
-        if (id) {
-          const fetchedContact = this.contactService.getContact(id);
-          if (fetchedContact) {
-            this.contact = fetchedContact;
-          }
-        }
+    this.route.params.subscribe((params: Params) => {
+      const id = params['id'];
+      if (!id) {
+        this.router.navigate(['/contacts']);
+        return;
       }
-    );
+      this.contact = this.contactService.getContact(id);
+      if (!this.contact) {
+        this.router.navigate(['/contacts']);
+      }
+    });
   }
 
   onDelete() {

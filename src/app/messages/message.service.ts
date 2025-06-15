@@ -30,4 +30,12 @@ export class MessageService {
     this.messages.push(message);
     this.messageChangedEvent.emit(this.messages.slice());
   }
+
+  updateMessage(updatedMessage: Message) {
+    const index = this.messages.findIndex(msg => msg.id === updatedMessage.id);
+    if (index !== -1) {
+      this.messages[index] = updatedMessage;
+      this.messageChangedEvent.emit(this.messages.slice());
+    }
+  }
 }

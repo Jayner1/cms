@@ -1,33 +1,158 @@
-
-.required.ng-invalid {
-  border: 1px solid red;
+.contact-edit-container {
+  max-width: 700px;
+  margin: 0 auto;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1.15rem; /* increased base font size */
 }
 
-.invalid.ng-invalid.ng-dirty {
-  border: 1px solid red;
+form {
+  display: flex;
+  flex-direction: column;
 }
 
-.pad-left-right{
-  padding-left:.1rem;
+.form-group {
+  margin-bottom: 1.5rem; /* bigger spacing */
 }
 
-.deleteButton {
-  margin-top: 1.5rem;
-  margin-left: -1.2rem;
-  width: 3.4rem;
+label {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: #333;
+  font-size: 1.2rem;
 }
 
-.buttonDiv {
-  margin-top: 1.5rem;
+input.form-control {
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  padding: 0.7rem 1rem; /* more padding */
+  font-size: 1.15rem;
+  transition: border-color 0.3s ease;
 }
 
-.groupDiv {
-  min-height: 6rem;
-  border: solid thin lightgrey;
+input.form-control:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 7px rgba(0, 123, 255, 0.6);
 }
 
-.dragMsg {
-  font-size: 2rem;
-  color: darkgrey;
-  margin-left: 3rem;
+.text-danger {
+  font-size: 1rem;
+  margin-top: 0.3rem;
+}
+
+.group-drop-list {
+  background: #fff;
+  min-height: 5rem;
+  border: 2px dashed #bbb;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.group-drop-list.cdk-drop-list-dragging {
+  background-color: #e7f3ff;
+  border-color: #3399ff;
+}
+
+.group-contact-item {
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  background-color: #f0f0f0;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 200px; /* wider boxes */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  font-size: 1.1rem;
+}
+
+.group-contact-item.cdk-drag-preview {
+  box-shadow: 0 0 14px rgba(0, 123, 255, 0.8);
+  border-radius: 8px;
+}
+
+.group-contact-item.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+button.btn-danger {
+  padding: 0 0.75rem;
+  font-size: 1.5rem; /* bigger remove button */
+  line-height: 1;
+  color: #fff;
+  background-color: #dc3545;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: center;
+  height: 38px;
+  width: 38px;
+}
+
+button.btn-danger:hover {
+  background-color: #bb2d3b;
+}
+
+.alert-danger {
+  font-size: 1.1rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+}
+
+.mt-4 {
+  margin-top: 2rem;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.gap-2 {
+  gap: 1rem;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  padding: 0.6rem 1.5rem; /* larger button */
+  font-size: 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: #fff;
+}
+
+.btn-primary:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  font-size: 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #565e64;
 }

@@ -1,29 +1,34 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Contact } from '../contact.model';
+
 import { ContactService } from '../contact.service';
+import { Contact } from '../contact.model';
 
 @Component({
   selector: 'cms-contact-list',
   templateUrl: './contact-list.component.html',
   styleUrls: ['./contact-list.component.css']
 })
-export class ContactListComponent implements OnInit, OnDestroy {
+export class ContactsListComponent implements OnInit, OnDestroy {
   contacts: Contact[] = [];
-  private subscription: Subscription = new Subscription();
+  private contactsChangedSubscription!: Subscription;
 
-  constructor(private contactService: ContactService) { }
+  constructor(private contactService: ContactService) {}
 
   ngOnInit(): void {
+    // Get initial contacts
     this.contacts = this.contactService.getContacts();
-    this.subscription = this.contactService.contactListChangedEvent.subscribe(
-      (contactsList: Contact[]) => {
-        this.contacts = contactsList;
+
+    // Subscribe to changes so UI updates when contact list changes
+    this.contactsChangedSubscription = this.contactService.contactListChangedEvent.subscribe(
+      (contacts: Contact[]) => {
+        this.contacts = contacts;
       }
     );
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    // Unsubscribe when component is destroyed
+    this.contactsChangedSubscription.unsubscribe();
   }
 }

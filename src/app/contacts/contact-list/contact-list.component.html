@@ -1,29 +1,30 @@
-<div class="container">
-  <div class="row">
-    <div class="col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <div class="row pad-left-right">
-            <span class="pull-left title">Contacts</span>
-            <div class="pull-right">
-              <a [routerLink]="['/contacts/new']" class="btn btn-success">New Contact</a>
-            </div>
-          </div>
-        </div>
-        <div class="panel-body">
-          <div class="center-panel">
-            <ul class="list-group">
-              <li class="list-group-item" *ngFor="let contact of contacts">
-                <cms-contact-item [contact]="contact"></cms-contact-item>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="panel panel-default">
-      </div>
-    </div>
+<div
+  id="contactsList"
+  cdkDropList
+  [cdkDropListData]="contacts"
+  [cdkDropListConnectedTo]="['groupList']"
+  class="contacts-left-panel"
+  style="overflow-y: auto; max-height: 90vh;"
+>
+  <div
+    *ngFor="let contact of contacts"
+    cdkDrag
+    class="list-group-item"
+    style="display: flex; align-items: center; cursor: pointer;"
+  >
+    <a [routerLink]="[contact.id]" style="text-decoration: none; color: inherit; display: flex; align-items: center; width: 100%;">
+      <img 
+        *ngIf="contact.imageUrl"
+        [src]="contact.imageUrl" 
+        alt="{{ contact.name }}" 
+        style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px;"
+      />
+      <span>{{ contact.name }}</span>
+    </a>
   </div>
+</div>
+
+<!-- Add a button for creating new contacts -->
+<div style="margin-top: 1rem;">
+  <button class="btn btn-primary" [routerLink]="['new']">New Contact</button>
 </div>
