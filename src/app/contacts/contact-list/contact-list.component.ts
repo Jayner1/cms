@@ -13,6 +13,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   contacts: Contact[] = [];
   private contactsChangedSubscription!: Subscription;
 
+  term: string = ''; // Search term property
+
   constructor(private contactService: ContactService) {}
 
   ngOnInit(): void {
@@ -25,6 +27,11 @@ export class ContactsListComponent implements OnInit, OnDestroy {
         this.contacts = contacts;
       }
     );
+  }
+
+  // Search method updates the search term
+  search(value: string) {
+    this.term = value;
   }
 
   ngOnDestroy(): void {

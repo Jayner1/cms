@@ -17,12 +17,14 @@ import { MessageListComponent } from './messages/message-list/message-list.compo
 import { MessageItemComponent } from './messages/message-item/message-item.component';
 import { MessageEditComponent } from './messages/message-edit/message-edit.component';
 import { MessagesComponent } from './messages/messages.component';
+import { HttpClientModule } from '@angular/common/http';
 
 import { FormsModule } from '@angular/forms';
 import { DropdownDirective } from './dropdown.directive'; 
 import { AppRoutingModule } from './app-routing.module';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ContactsFilterPipe } from './contacts/contacts-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -42,13 +44,15 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MessageEditComponent,
     MessageListComponent,
     MessagesComponent,
-    DropdownDirective  
+    DropdownDirective,
+    ContactsFilterPipe  
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,
-    DragDropModule
+    DragDropModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

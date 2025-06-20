@@ -1,30 +1,57 @@
-<div
-  id="contactsList"
-  cdkDropList
-  [cdkDropListData]="contacts"
-  [cdkDropListConnectedTo]="['groupList']"
-  class="contacts-left-panel"
-  style="overflow-y: auto; max-height: 90vh;"
->
-  <div
-    *ngFor="let contact of contacts"
-    cdkDrag
-    class="list-group-item"
-    style="display: flex; align-items: center; cursor: pointer;"
-  >
-    <a [routerLink]="[contact.id]" style="text-decoration: none; color: inherit; display: flex; align-items: center; width: 100%;">
-      <img 
-        *ngIf="contact.imageUrl"
-        [src]="contact.imageUrl" 
-        alt="{{ contact.name }}" 
-        style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px;"
-      />
-      <span>{{ contact.name }}</span>
-    </a>
-  </div>
-</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="row">
+      <span class="title pad-left-right">Contacts</span>
+    </div>
 
-<!-- Add a button for creating new contacts -->
-<div style="margin-top: 1rem;">
-  <button class="btn btn-primary" [routerLink]="['new']">New Contact</button>
+    <div class="row">
+      <div class="input-group pull-left pad-left-right col-xs-7">
+        <!-- Search input -->
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Enter a search value"
+          #searchBox
+          (keyup)="search(searchBox.value)"
+        />
+        <div
+          class="glyphicon glyphicon-search input-group-addon"
+          (click)="search(searchBox.value)"
+        ></div>
+      </div>
+    </div>
+
+    <div class="pull-right pad-left-right" style="margin-top: 0.5rem;">
+      <a class="btn btn-success" [routerLink]="['new']">New Contact</a>
+    </div>
+  </div>
+
+  <div
+    id="contactsList"
+    cdkDropList
+    [cdkDropListData]="contacts"
+    [cdkDropListConnectedTo]="['groupList']"
+    class="contacts-left-panel"
+    style="overflow-y: auto; max-height: 90vh;"
+  >
+    <div
+      *ngFor="let contact of contacts | contactsFilter: term"
+      cdkDrag
+      class="list-group-item"
+      style="display: flex; align-items: center; cursor: pointer;"
+    >
+      <a
+        [routerLink]="[contact.id]"
+        style="text-decoration: none; color: inherit; display: flex; align-items: center; width: 100%;"
+      >
+        <img
+          *ngIf="contact.imageUrl"
+          [src]="contact.imageUrl"
+          alt="{{ contact.name }}"
+          style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px;"
+        />
+        <span>{{ contact.name }}</span>
+      </a>
+    </div>
+  </div>
 </div>

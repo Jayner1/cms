@@ -22,17 +22,17 @@ export class DocumentDetailComponent implements OnInit {
     this.route.params.subscribe(
       (params: Params) => {
         this.id = params['id'];
-        const document = this.documentService.getDocument(this.id);
-        if (document) {
-          this.document = document;
+        const doc = this.documentService.getDocument(this.id);
+        if (doc) {
+          this.document = doc;
         }
       }
     );
   }
 
   onDelete() {
-    if (this.document && this.document.id) {
-      this.documentService.deleteDocument(this.document.id);
+    if (this.document) {
+      this.documentService.deleteDocument(this.document);
       this.router.navigateByUrl('/documents');
     }
   }

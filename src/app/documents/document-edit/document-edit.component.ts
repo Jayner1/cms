@@ -38,11 +38,12 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
           console.log('New document mode');
           return;
         }
-        this.originalDocument = this.documentService.getDocument(this.id);
+        this.originalDocument = this.documentService.getDocument(this.id) ?? null;
         if (!this.originalDocument) {
           return;
         }
         this.editMode = true;
+        // Deep clone the original document to avoid mutating it directly
         this.document = JSON.parse(JSON.stringify(this.originalDocument));
         console.log('Edit mode, document:', this.document);
       }
@@ -71,7 +72,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     );
 
     if (this.editMode && this.originalDocument) {
-      this.documentService.updateDocument(this.originalDocument.id, newDocument);
+      // UpdateDocument now expects originalDocument and newDocument objects
+      this.documentService.updateDocument(this.originalDocument, newDocument);
     } else {
       this.documentService.addDocument(newDocument);
     }

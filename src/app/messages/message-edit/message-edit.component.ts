@@ -16,29 +16,30 @@ export class MessageEditComponent implements OnChanges {
   newMsgText: string = '';
   senderId: string = '1'; // Example senderId
 
+  // Store original message copy to use on update
+  originalMessage: Message | null = null;
+
   constructor(
     private messageService: MessageService,
     private router: Router
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    // When switching between editing a message and adding a new one
     if (changes['message'] && this.message) {
-      // Load message data for editing
+      this.originalMessage = { ...this.message };  // Clone original message for update
       this.newSubject = this.message.subject;
       this.newMsgText = this.message.msgText;
     }
 
-    // If we switch to "new message" mode
     if (changes['isNew'] && this.isNew) {
       this.resetForm();
+      this.originalMessage = null;
     }
   }
 
   onSendMessage() {
     if (this.newSubject.trim() && this.newMsgText.trim()) {
       if (this.isNew) {
-        // Create new message
         const newMessage: Message = {
           id: (this.messageService.getMessages().length + 1).toString(),
           subject: this.newSubject,
@@ -46,11 +47,13 @@ export class MessageEditComponent implements OnChanges {
           sender: this.senderId
         };
         this.messageService.addMessage(newMessage);
-      } else if (this.message) {
-        // Update existing message
-        this.message.subject = this.newSubject;
-        this.message.msgText = this.newMsgText;
-        this.messageService.updateMessage(this.message);
+      } else if (this.message && this.originalMessage) {
+        const updatedMessage: Message = {
+          ...this.originalMessage,
+          subject: this.newSubject,
+          msgText: this.newMsgText
+        };
+        this.messageService.updateMessage(this.originalMessage, updatedMessage);
       }
 
       this.resetForm();
