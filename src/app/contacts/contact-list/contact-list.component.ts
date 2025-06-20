@@ -18,10 +18,10 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   constructor(private contactService: ContactService) {}
 
   ngOnInit(): void {
-    // Get initial contacts
-    this.contacts = this.contactService.getContacts();
+    // Fetch contacts from Firebase on init
+    this.contactService.fetchContacts();
 
-    // Subscribe to changes so UI updates when contact list changes
+    // Subscribe to update UI when contact list changes
     this.contactsChangedSubscription = this.contactService.contactListChangedEvent.subscribe(
       (contacts: Contact[]) => {
         this.contacts = contacts;
@@ -29,13 +29,12 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     );
   }
 
-  // Search method updates the search term
+  // Update search term on keyup in input box
   search(value: string) {
     this.term = value;
   }
 
   ngOnDestroy(): void {
-    // Unsubscribe when component is destroyed
     this.contactsChangedSubscription.unsubscribe();
   }
 }

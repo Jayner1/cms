@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Subject } from 'rxjs';
 
@@ -11,7 +11,9 @@ export class ContactService {
   contacts: Contact[] = [];
   contactListChangedEvent = new Subject<Contact[]>();
   maxContactId: number = 0;
-  private contactsUrl = 'https://jyangular-dd8c7-default-rtdb.firebaseio.com/'; // Replace with your Firebase URL
+
+  // IMPORTANT: Add `.json` for Firebase REST API
+  private contactsUrl = 'https://jyangular-dd8c7-default-rtdb.firebaseio.com/contacts.json';
 
   constructor(private http: HttpClient) {}
 
@@ -34,9 +36,10 @@ export class ContactService {
     return maxId;
   }
 
+  // Fetch contacts from Firebase
   fetchContacts() {
     this.http.get<Contact[]>(this.contactsUrl).subscribe(
-      (contacts: Contact[]) => {
+      (contacts: Contact[] | null) => {
         this.contacts = contacts ? contacts : [];
         this.maxContactId = this.getMaxId();
         this.contacts.sort((a, b) => a.name.localeCompare(b.name));
@@ -49,7 +52,7 @@ export class ContactService {
   }
 
   storeContacts() {
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     this.http.put(this.contactsUrl, JSON.stringify(this.contacts), { headers: headers })
       .subscribe(() => {
         this.contactListChangedEvent.next(this.contacts.slice());
