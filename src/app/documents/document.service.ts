@@ -1,41 +1,91 @@
 import { Injectable, EventEmitter } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Document } from './document.model';
-import { MOCKDOCUMENTS } from './MOCKDOCUMENTS';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocumentService {
   documents: Document[] = [];
-  documentSelectedEvent = new EventEmitter<Document>();
-  documentChangedEvent = new EventEmitter<Document[]>();
+  documentListChangedEvent = new Subject<Document[]>();
+  maxDocumentId: number = 0;
 
-  constructor() {
-    this.documents = MOCKDOCUMENTS;
-  }
+  private firebaseUrl = 'https://jyangular-dd8c7-default-rtdb.firebaseio.com/documents.json';
 
-  getDocuments(): Document[] {
+  constructor(private http: HttpClient) {}
+
+  // Get all documents (HTTP GET)
+  getDocuments() {
+    this.http.get<Document[]>(this.firebaseUrl).subscribe(
+      (documents: Document[]) => {
+        this.documents = documents || [];
+        this.maxDocumentId = this.getMaxId();
+        this.documents.sort((a, b) => a.name.localeCompare(b.name));
+        this.documentListChangedEvent.next(this.documents.slice());
+      },
+      (error: any) => {
+        console.error('Failed to fetch documents:', error);
+      }
+    );
     return this.documents.slice();
   }
 
-  getDocument(id: string): Document | null {
-    for (const document of this.documents) {
-      if (document.id.toString() === id) {
-        return document;
-      }
-    }
-    return null;
+  // Get a single document by id
+  getDocument(id: string): Document | undefined {
+    return this.documents.find(doc => doc.id === id);
   }
 
+  // Add a new document
+  addDocument(newDocument: Document) {
+    if (!newDocument) return;
+    this.maxDocumentId++;
+    newDocument.id = this.maxDocumentId.toString();
+    this.documents.push(newDocument);
+    this.storeDocuments();
+  }
+
+  // Update existing document
+  updateDocument(originalDocument: Document, newDocument: Document) {
+    if (!originalDocument || !newDocument) return;
+    const index = this.documents.findIndex(doc => doc.id === originalDocument.id);
+    if (index < 0) return;
+
+    newDocument.id = originalDocument.id;
+    this.documents[index] = newDocument;
+    this.storeDocuments();
+  }
+
+  // Delete a document
   deleteDocument(document: Document) {
-    if (!document) {
-      return;
+    if (!document) return;
+    const index = this.documents.findIndex(doc => doc.id === document.id);
+    if (index < 0) return;
+
+    this.documents.splice(index, 1);
+    this.storeDocuments();
+  }
+
+  // Save documents to Firebase (HTTP PUT)
+  storeDocuments() {
+    const documentsString = JSON.stringify(this.documents);
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+    this.http.put(this.firebaseUrl, documentsString, { headers: headers })
+      .subscribe(() => {
+        this.documentListChangedEvent.next(this.documents.slice());
+      });
+  }
+
+  // Helper to get max ID number
+  getMaxId(): number {
+    let maxId = 0;
+    for (const doc of this.documents) {
+      const currentId = parseInt(doc.id, 10);
+      if (currentId > maxId) {
+        maxId = currentId;
+      }
     }
-    const pos = this.documents.indexOf(document);
-    if (pos < 0) {
-      return;
-    }
-    this.documents.splice(pos, 1);
-    this.documentChangedEvent.emit(this.documents.slice());
+    return maxId;
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Contact } from '../contact.model';
 import { ContactService } from '../contact.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'cms-contact-detail',
@@ -18,9 +18,16 @@ export class ContactDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params: Params) => {
       const id = params['id'];
+      if (!id) {
+        this.router.navigate(['/contacts']);
+        return;
+      }
       this.contact = this.contactService.getContact(id);
+      if (!this.contact) {
+        this.router.navigate(['/contacts']);
+      }
     });
   }
 

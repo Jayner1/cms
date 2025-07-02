@@ -1,22 +1,49 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <div class="row pad-all">
-      <h4 class="title margin-left-right">New Message</h4>
+      <h4 class="title margin-left-right">
+        {{ isNew ? 'New Message' : 'Edit Message' }}
+      </h4>
     </div>
   </div>
   <div class="panel-body">
     <div class="pad-left-right">
-      <form #messageForm="ngForm">
+      <form #messageForm="ngForm" (ngSubmit)="onSendMessage()">
         <div class="form-group">
           <label for="subject">Subject</label>
-          <input type="text" class="form-control" id="subject" name="subject" [(ngModel)]="newSubject" required>
+          <input
+            type="text"
+            class="form-control"
+            id="subject"
+            name="subject"
+            [(ngModel)]="newSubject"
+            required
+          >
         </div>
         <div class="form-group">
           <label for="message">Message</label>
-          <textarea class="form-control" id="message" name="message" [(ngModel)]="newMsgText" required></textarea>
+          <textarea
+            class="form-control"
+            id="message"
+            name="message"
+            [(ngModel)]="newMsgText"
+            required
+          ></textarea>
         </div>
-        <button type="submit" class="btn btn-success" (click)="onSendMessage(); messageForm.reset()">Send</button>
-        <button type="button" class="btn btn-danger" [routerLink]="['/messages']">Clear</button>
+        <button
+          type="submit"
+          class="btn btn-success"
+          [disabled]="messageForm.invalid"
+        >
+          Send
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="onClear()"
+        >
+          Clear
+        </button>
       </form>
     </div>
   </div>

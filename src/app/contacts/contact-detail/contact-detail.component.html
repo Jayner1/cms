@@ -1,4 +1,9 @@
 <div class="panel-body">
+  <!-- Add New Contact button always visible -->
+  <div class="add-contact-button" style="margin-bottom: 1rem;">
+    <a class="btn btn-success" [routerLink]="['/contacts', 'new']">Add New Contact</a>
+  </div>
+
   <div *ngIf="contact">
     <h4>{{ contact.name }}</h4>
     <p><strong>Email:</strong> {{ contact.email }}</p>
@@ -6,10 +11,28 @@
     <p *ngIf="contact.imageUrl">
       <img [src]="contact.imageUrl" alt="{{ contact.name }}" style="width: 100px; height: 100px;">
     </p>
+
+    <!-- New group display section -->
+    <div *ngIf="contact.group && contact.group.length > 0">
+      <h5>Group Members:</h5>
+      <ul style="list-style: none; padding: 0;">
+        <li *ngFor="let member of contact.group" style="display: flex; align-items: center; margin-bottom: 8px;">
+          <img 
+            [src]="member.imageUrl" 
+            alt="{{ member.name }}" 
+            style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover;"
+            *ngIf="member.imageUrl"
+          />
+          <span>{{ member.name }} - {{ member.email }}</span>
+        </li>
+      </ul>
+    </div>
+
     <div class="button-group">
       <a class="btn btn-primary" [routerLink]="['/contacts', contact.id, 'edit']">Edit</a>
       <a class="btn btn-danger" (click)="onDelete()">Delete</a>
     </div>
   </div>
+
   <p *ngIf="!contact">Select a contact to view details here.</p>
 </div>

@@ -1,6 +1,15 @@
-<a class="list-group-item clearfix" [routerLink]="['/messages', message?.id]" routerLinkActive="active">
-  <div>
-    <span class="messageHeader">{{ message?.subject }} - {{ messageSender }}</span>
-    <div class="messageText">{{ message?.msgText }}</div>
+<a 
+  class="list-group-item d-flex flex-column align-items-start"
+  [routerLink]="['/messages', message?.id]"
+  routerLinkActive="active"
+  style="cursor: pointer;"
+>
+  <div class="w-100">
+    <span class="messageHeader" style="font-weight: bold; font-size: 1.1rem;">
+      {{ message?.subject }} - {{ messageSender }}
+    </span>
+    <p class="messageText" style="margin: 0.5rem 0 0 0; color: #555;">
+      {{ message?.msgText }}
+    </p>
   </div>
 </a>

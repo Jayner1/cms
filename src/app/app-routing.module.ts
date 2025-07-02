@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DocumentsComponent } from './documents/documents.component';
-import { MessageListComponent } from './messages/message-list.component';
+import { MessageListComponent } from './messages/message-list/message-list.component';
 import { ContactsComponent } from './contacts/contacts.component';
 import { DocumentEditComponent } from './documents/document-edit/document-edit.component';
 import { DocumentDetailComponent } from './documents/document-detail/document-detail.component';
@@ -20,6 +20,7 @@ const routes: Routes = [
     { path: ':id', component: MessageItemComponent }
   ]},
   { path: 'contacts', component: ContactsComponent, children: [
+    { path: '', pathMatch: 'full', redirectTo: 'new' }, 
     { path: 'new', component: ContactEditComponent },
     { path: ':id', component: ContactDetailComponent },
     { path: ':id/edit', component: ContactEditComponent }
@@ -30,4 +31,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -1,0 +1,119 @@
+<div class="contact-edit-container p-3">
+  <form (ngSubmit)="onSubmit(form)" #form="ngForm" autocomplete="off" novalidate>
+    <!-- Name -->
+    <div class="form-group mb-3">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        class="form-control"
+        [(ngModel)]="contact.name"
+        required
+        #name="ngModel"
+      />
+      <div *ngIf="name.invalid && name.touched" class="text-danger">
+        Name is required.
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group mb-3">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        class="form-control"
+        [(ngModel)]="contact.email"
+        required
+        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+        #email="ngModel"
+      />
+      <div *ngIf="email.invalid && email.touched" class="text-danger">
+        Enter a valid Email address.
+      </div>
+    </div>
+
+    <!-- Phone -->
+    <div class="form-group mb-3">
+      <label for="phone">Phone</label>
+      <input
+        type="text"
+        id="phone"
+        name="phone"
+        class="form-control"
+        [(ngModel)]="contact.phone"
+        required
+        pattern="\D*([2-9]\d{2})(\D*)([2-9]\d{2})(\D*)(\d{4})\D*"
+        #phone="ngModel"
+      />
+      <div *ngIf="phone.invalid && phone.touched" class="text-danger">
+        Enter a valid phone number.
+      </div>
+    </div>
+
+    <!-- Image URL -->
+    <div class="form-group mb-3">
+      <label for="imageUrl">Image URL</label>
+      <input
+        type="text"
+        id="imageUrl"
+        name="imageUrl"
+        class="form-control"
+        [(ngModel)]="contact.imageUrl"
+      />
+    </div>
+
+    <!-- Group Contacts Drag-Drop -->
+    <div class="row">
+      <div class="form-group col-12">
+        <label for="groupList">Group Contacts:</label>
+        <div
+          id="groupList"
+          cdkDropList
+          [cdkDropListData]="groupContacts"
+          [cdkDropListConnectedTo]="['contactsList']"
+          (cdkDropListDropped)="onGroupDrop($event)"
+          class="group-drop-list border rounded p-2"
+          style="min-height: 3rem; display: flex; flex-wrap: wrap; gap: 0.5rem;"
+        >
+          <div
+            *ngFor="let contact of groupContacts; let i = index"
+            cdkDrag
+            class="cdk-drag group-contact-item d-flex align-items-center border rounded bg-white p-1"
+            style="cursor: move;"
+          >
+            <cms-contact-item [contact]="contact" class="flex-grow-1"></cms-contact-item>
+            <button
+              class="btn btn-danger btn-sm ms-2"
+              type="button"
+              (click)="onRemoveItem(i)"
+              aria-label="Remove contact from group"
+            >
+              &times;
+            </button>
+          </div>
+
+          <span *ngIf="groupContacts.length === 0" class="text-muted p-2">
+            Drag contacts here to add to the group
+          </span>
+        </div>
+
+        <div *ngIf="invalidDrop" class="alert alert-danger mt-2">
+          Cannot add this contact to the group (duplicate).
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit and Cancel Buttons -->
+    <div class="mt-4 d-flex gap-2">
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+        {{ editMode ? 'Save Changes' : 'Add Contact' }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

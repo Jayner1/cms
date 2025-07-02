@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+
 import { AppComponent } from './app.component';
-import { ContactListComponent } from './contacts/contact-list/contact-list.component'; 
+import { ContactsListComponent } from './contacts/contact-list/contact-list.component'; 
 import { ContactsComponent } from './contacts/contacts.component'; 
 import { HeaderComponent } from './header.component'; 
 import { ContactDetailComponent } from './contacts/contact-detail/contact-detail.component';
@@ -16,14 +17,19 @@ import { MessageListComponent } from './messages/message-list/message-list.compo
 import { MessageItemComponent } from './messages/message-item/message-item.component';
 import { MessageEditComponent } from './messages/message-edit/message-edit.component';
 import { MessagesComponent } from './messages/messages.component';
+import { HttpClientModule } from '@angular/common/http';
+
 import { FormsModule } from '@angular/forms';
 import { DropdownDirective } from './dropdown.directive'; 
 import { AppRoutingModule } from './app-routing.module';
 
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ContactsFilterPipe } from './contacts/contacts-filter.pipe';
+
 @NgModule({
   declarations: [
     AppComponent,
-    ContactListComponent, 
+    ContactsListComponent, 
     ContactsComponent,
     HeaderComponent,
     ContactDetailComponent,
@@ -38,12 +44,15 @@ import { AppRoutingModule } from './app-routing.module';
     MessageEditComponent,
     MessageListComponent,
     MessagesComponent,
-    DropdownDirective  
+    DropdownDirective,
+    ContactsFilterPipe  
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    DragDropModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

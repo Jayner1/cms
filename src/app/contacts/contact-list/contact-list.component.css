@@ -1,16 +1,27 @@
 .center-panel {
   margin-left: auto;
   margin-right: auto;
-  width: 38rem;
-  overflow: hidden;
+  max-width: 100%;
+  overflow-x: hidden;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 
-.title {
-  font-size: 2.5rem;
-  font-weight: bold;
+.list-group-item {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
-.pad-left-right {
-  padding-left: 1rem;
-  padding-right: 1rem;
+.list-group-item a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.list-group-item img {
+  max-width: 50px;
+  height: auto;
+  flex-shrink: 0;
 }

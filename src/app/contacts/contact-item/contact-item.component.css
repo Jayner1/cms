@@ -4,9 +4,23 @@
   border: solid thin darkgrey;
   margin-bottom: 0.5rem;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.list-group-item img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; 
+  object-fit: cover;
+  margin-right: 1rem;
 }
 
 .media-heading {
   font-size: 1.2rem;
   font-weight: bold;
+}
+
+.d-flex > * {
+  min-width: 0;
 }
