@@ -46,6 +46,7 @@ export class ContactEditComponent implements OnInit, OnDestroy {
           return;
         }
         this.editMode = true;
+        // Deep clone to avoid modifying original directly
         this.contact = JSON.parse(JSON.stringify(this.originalContact));
         if (this.contact.group) {
           this.groupContacts = [...this.contact.group];
@@ -65,8 +66,14 @@ export class ContactEditComponent implements OnInit, OnDestroy {
       return;
     }
     const value = form.value;
+
+    // Generate new id using contactService.contacts length + 1 (converted to string)
+    const newId = this.editMode
+      ? this.contact.id
+      : (this.contactService.contacts.length + 1).toString();
+
     const newContact = new Contact(
-      this.editMode ? this.contact.id : (this.contactService.maxContactId + 1).toString(),
+      newId,
       value.name,
       value.email,
       value.phone,

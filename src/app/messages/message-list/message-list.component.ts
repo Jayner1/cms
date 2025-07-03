@@ -20,11 +20,13 @@ export class MessageListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.messages = this.messageService.getMessages();
+    this.messageService.getMessages().subscribe(response => {
+      this.messages = response.messages;
+    });
   }
 
   onSelectedMessage(message: Message) {
-    this.selectedMessageEvent.emit(message);
+    this.selectedMessageEvent.emit(message); // ✅ must emit Message object
   }
 
   onAddMessage() {

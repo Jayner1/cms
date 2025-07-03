@@ -16,7 +16,6 @@ export class MessageEditComponent implements OnChanges {
   newMsgText: string = '';
   senderId: string = '1'; // Example senderId
 
-  // Store original message copy to use on update
   originalMessage: Message | null = null;
 
   constructor(
@@ -26,7 +25,7 @@ export class MessageEditComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['message'] && this.message) {
-      this.originalMessage = { ...this.message };  // Clone original message for update
+      this.originalMessage = { ...this.message };
       this.newSubject = this.message.subject;
       this.newMsgText = this.message.msgText;
     }
@@ -40,12 +39,16 @@ export class MessageEditComponent implements OnChanges {
   onSendMessage() {
     if (this.newSubject.trim() && this.newMsgText.trim()) {
       if (this.isNew) {
+        // Use the current length + 1 as new id string
+        const newId = (this.messageService.messages.length + 1).toString();
+
         const newMessage: Message = {
-          id: (this.messageService.getMessages().length + 1).toString(),
+          id: newId,
           subject: this.newSubject,
           msgText: this.newMsgText,
           sender: this.senderId
         };
+
         this.messageService.addMessage(newMessage);
       } else if (this.message && this.originalMessage) {
         const updatedMessage: Message = {
@@ -53,6 +56,7 @@ export class MessageEditComponent implements OnChanges {
           subject: this.newSubject,
           msgText: this.newMsgText
         };
+
         this.messageService.updateMessage(this.originalMessage, updatedMessage);
       }
 

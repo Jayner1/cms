@@ -2,67 +2,61 @@ import { Injectable } from '@angular/core';
 import { Message } from './message.model';
 import { Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
+  public messages: Message[] = [];
   messageListChangedEvent = new Subject<Message[]>();
-  messages: Message[] = [];
-  maxMessageId: number = 0;
 
-  private firebaseUrl: string = 'https://jyangular-dd8c7-default-rtdb.firebaseio.com/messages.json';
+  private messagesUrl = 'http://localhost:3000/api/messages';
 
   constructor(private http: HttpClient) {}
 
+  // Fetch all messages and update local array & event
   getMessages() {
-    this.http.get<Message[]>(this.firebaseUrl)
-      .subscribe(
-        (messages: Message[]) => {
-          this.messages = messages ?? [];
-          this.maxMessageId = this.getMaxId();
+    return this.http.get<{ message: string; messages: Message[] }>(this.messagesUrl)
+      .pipe(
+        tap(response => {
+          this.messages = response.messages || [];
           this.messages.sort((a, b) => a.subject.localeCompare(b.subject));
           this.messageListChangedEvent.next(this.messages.slice());
-        },
-        (error: any) => {
-          console.error('Error fetching messages:', error);
-        }
+        })
       );
-    return this.messages.slice();
   }
 
-  getMaxId(): number {
-    let maxId = 0;
-    for (const message of this.messages) {
-      const currentId = +message.id;
-      if (currentId > maxId) {
-        maxId = currentId;
-      }
-    }
-    return maxId;
+  // Get message by id from local cache
+  getMessage(id: string): Message | undefined {
+    return this.messages.find(m => m.id === id);
   }
 
-  storeMessages() {
-    const messagesString = JSON.stringify(this.messages);
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-    this.http.put(this.firebaseUrl, messagesString, { headers })
-      .subscribe(() => {
-        this.messageListChangedEvent.next(this.messages.slice());
-      }, error => {
-        console.error('Error storing messages:', error);
-      });
-  }
-
+  // Add message via POST
   addMessage(newMessage: Message) {
     if (!newMessage) return;
 
-    this.maxMessageId++;
-    newMessage.id = this.maxMessageId.toString();
-    this.messages.push(newMessage);
-    this.storeMessages();
+    newMessage.id = ''; // backend will assign id
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http.post<{ message: string; messageObj: Message }>(
+      this.messagesUrl,
+      newMessage,
+      { headers }
+    ).subscribe(
+      response => {
+        this.messages.push(response.messageObj);
+        this.messages.sort((a, b) => a.subject.localeCompare(b.subject));
+        this.messageListChangedEvent.next(this.messages.slice());
+      },
+      error => {
+        console.error('Failed to add message:', error);
+      }
+    );
   }
 
+  // Update message via PUT
   updateMessage(originalMessage: Message, newMessage: Message) {
     if (!originalMessage || !newMessage) return;
 
@@ -70,17 +64,41 @@ export class MessageService {
     if (pos < 0) return;
 
     newMessage.id = originalMessage.id;
-    this.messages[pos] = newMessage;
-    this.storeMessages();
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http.put(
+      `${this.messagesUrl}/${originalMessage.id}`,
+      newMessage,
+      { headers }
+    ).subscribe(
+      () => {
+        this.messages[pos] = newMessage;
+        this.messages.sort((a, b) => a.subject.localeCompare(b.subject));
+        this.messageListChangedEvent.next(this.messages.slice());
+      },
+      error => {
+        console.error('Failed to update message:', error);
+      }
+    );
   }
 
+  // Delete message via DELETE
   deleteMessage(message: Message) {
     if (!message) return;
 
     const pos = this.messages.findIndex(m => m.id === message.id);
     if (pos < 0) return;
 
-    this.messages.splice(pos, 1);
-    this.storeMessages();
+    this.http.delete(`${this.messagesUrl}/${message.id}`)
+      .subscribe(
+        () => {
+          this.messages.splice(pos, 1);
+          this.messageListChangedEvent.next(this.messages.slice());
+        },
+        error => {
+          console.error('Failed to delete message:', error);
+        }
+      );
   }
 }

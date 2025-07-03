@@ -10,77 +10,100 @@ import { Contact } from './contact.model';
 export class ContactService {
   contacts: Contact[] = [];
   contactListChangedEvent = new Subject<Contact[]>();
-  maxContactId: number = 0;
 
-  // IMPORTANT: Add `.json` for Firebase REST API
-  private contactsUrl = 'https://jyangular-dd8c7-default-rtdb.firebaseio.com/contacts.json';
+  private contactsUrl = 'http://localhost:3000/api/contacts';
 
   constructor(private http: HttpClient) {}
 
-  getContacts(): Contact[] {
-    return this.contacts.slice();
-  }
-
-  getContact(id: string): Contact | null {
-    return this.contacts.find(contact => contact.id === id) ?? null;
-  }
-
-  getMaxId(): number {
-    let maxId = 0;
-    this.contacts.forEach(contact => {
-      const currentId = parseInt(contact.id, 10);
-      if (currentId > maxId) {
-        maxId = currentId;
-      }
-    });
-    return maxId;
-  }
-
-  // Fetch contacts from Firebase
+  // Fetch contacts from Node API
   fetchContacts() {
-    this.http.get<Contact[]>(this.contactsUrl).subscribe(
-      (contacts: Contact[] | null) => {
-        this.contacts = contacts ? contacts : [];
-        this.maxContactId = this.getMaxId();
+    this.http.get<{ message: string; contacts: Contact[] }>(this.contactsUrl)
+      .subscribe(
+        response => {
+          this.contacts = response.contacts || [];
+          this.contacts.sort((a, b) => a.name.localeCompare(b.name));
+          this.contactListChangedEvent.next(this.contacts.slice());
+        },
+        error => {
+          console.error('Error fetching contacts:', error);
+        }
+      );
+  }
+
+  // Get local copy by id (fix: convert id to string before comparison)
+  getContact(id: string | any): Contact | null {
+    if (!id) return null;
+    const idStr = id.toString(); // convert ObjectId or string to string
+    return this.contacts.find(contact => contact.id.toString() === idStr) ?? null;
+  }
+
+  // Add contact via POST
+  addContact(newContact: Contact) {
+    if (!newContact) return;
+
+    newContact.id = '';
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http.post<{ message: string; contact: Contact }>(
+      this.contactsUrl,
+      newContact,
+      { headers }
+    ).subscribe(
+      response => {
+        this.contacts.push(response.contact);
         this.contacts.sort((a, b) => a.name.localeCompare(b.name));
         this.contactListChangedEvent.next(this.contacts.slice());
       },
-      (error) => {
-        console.error('Error fetching contacts:', error);
+      error => {
+        console.error('Failed to add contact:', error);
       }
     );
   }
 
-  storeContacts() {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    this.http.put(this.contactsUrl, JSON.stringify(this.contacts), { headers: headers })
-      .subscribe(() => {
-        this.contactListChangedEvent.next(this.contacts.slice());
-      });
-  }
-
-  addContact(newContact: Contact) {
-    if (!newContact) return;
-    this.maxContactId++;
-    newContact.id = this.maxContactId.toString();
-    this.contacts.push(newContact);
-    this.storeContacts();
-  }
-
+  // Update contact via PUT
   updateContact(originalContact: Contact, updatedContact: Contact) {
     if (!originalContact || !updatedContact) return;
+
     const pos = this.contacts.findIndex(c => c.id === originalContact.id);
     if (pos < 0) return;
+
     updatedContact.id = originalContact.id;
-    this.contacts[pos] = updatedContact;
-    this.storeContacts();
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http.put(
+      `${this.contactsUrl}/${originalContact.id}`,
+      updatedContact,
+      { headers }
+    ).subscribe(
+      () => {
+        this.contacts[pos] = updatedContact;
+        this.contacts.sort((a, b) => a.name.localeCompare(b.name));
+        this.contactListChangedEvent.next(this.contacts.slice());
+      },
+      error => {
+        console.error('Failed to update contact:', error);
+      }
+    );
   }
 
+  // Delete contact via DELETE
   deleteContact(contact: Contact) {
     if (!contact) return;
+
     const pos = this.contacts.findIndex(c => c.id === contact.id);
     if (pos < 0) return;
-    this.contacts.splice(pos, 1);
-    this.storeContacts();
+
+    this.http.delete(`${this.contactsUrl}/${contact.id}`)
+      .subscribe(
+        () => {
+          this.contacts.splice(pos, 1);
+          this.contactListChangedEvent.next(this.contacts.slice());
+        },
+        error => {
+          console.error('Failed to delete contact:', error);
+        }
+      );
   }
 }

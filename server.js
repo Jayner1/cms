@@ -4,25 +4,34 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const mongoose = require('mongoose');
+
 const documentsRoutes = require('./server/routes/documents');
 const messagesRoutes = require('./server/routes/messages');
 const contactsRoutes = require('./server/routes/contacts');
-
-
-// Import the routing file to handle the default route
 const index = require('./server/routes/app');
 
 const app = express();
 
-// Middleware setup
+// Connect to MongoDB
+async function connectDB() {
+  try {
+    await mongoose.connect('mongodb://localhost:27017/cms', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+    console.log('Connected to database!');
+  } catch (err) {
+    console.error('Connection failed:', err);
+  }
+}
+connectDB();
+
+// Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(logger('dev'));
-
-app.use('/api/documents', documentsRoutes);
-app.use('/api/messages', messagesRoutes);
-app.use('/api/contacts', contactsRoutes);
 
 // Enable CORS
 app.use((req, res, next) => {
@@ -38,22 +47,23 @@ app.use((req, res, next) => {
   next();
 });
 
-// Serve Angular static files from the correct output folder
-app.use(express.static(path.join(__dirname, 'dist/cms/browser')));
+// API Routes
+app.use('/api/documents', documentsRoutes);
+app.use('/api/messages', messagesRoutes);
+app.use('/api/contacts', contactsRoutes);
 
-// Map default route to index router
+// Serve Angular static files
+app.use(express.static(path.join(__dirname, 'dist/cms/browser')));
 app.use('/', index);
 
-// Express 5 requires named wildcard parameters for catch-all routes
+// Wildcard route (for Angular routing)
 app.get('/*splat', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/cms/browser/index.html'));
 });
 
-// Set port
+// Start server
 const port = process.env.PORT || '3000';
 app.set('port', port);
-
-// Create HTTP server and start listening
 const server = http.createServer(app);
 server.listen(port, () => {
   console.log('API running on localhost:' + port);
